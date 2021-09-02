@@ -23,4 +23,15 @@ namespace UsersForm
         public string name { get; set; } //Наименование типа пользователя
         public bool allow_edit { get; set; } //прав на редактирование данных пользователей
     }
+
+    public class Users_i
+    {
+        public int id { get; set; }
+        public string login { get; set; }
+        public string password { get; set; }
+        public string name { get; set; }
+        public bool allow_edit { get; set; }
+        public string nameType { get; set; }
+        public string last_visit_date { get; set; } //Дата последнего визита
+    }
 }

@@ -94,67 +94,50 @@ namespace UsersForm
 
         public DataTable Join_Users_UserTypes()
         {
-
-
-            var query = from Us in Tabl_Users.AsEnumerable()
+            IEnumerable<Users_i> query = from Us in Tabl_Users.AsEnumerable()
                         join UsType in Tabl_UserType.AsEnumerable()
                         on Us["type_id"] equals UsType["id"] into TabResult
                         from or in TabResult
-                        select new
+                        select new Users_i
                         {
-                            Us,
-                            or
+                            id = int.Parse(Us["id"].ToString()),
+                            login = Us["login"].ToString(),
+                            password = Us["password"].ToString(),
+                            name = Us["name"].ToString(),
+                            allow_edit = bool.Parse(or["Allow_edit"].ToString()),
+                            nameType = or["Type_Name"].ToString(),
+                            last_visit_date = Us["last_visit_date"].ToString()
                         };
 
-
-            DataTable dtResult = new DataTable();
-
-            //  Заполнение
-            dtResult.Columns.Add("id");
-            dtResult.Columns.Add("login");
-            dtResult.Columns.Add("password");
-            dtResult.Columns.Add("UserName");
-            dtResult.Columns.Add("TypeName");
-            dtResult.Columns.Add("Allow_edit");
-            dtResult.Columns.Add("last_visit_date");
-            
-
-            foreach (var i in query)
-            {
-                DataRow NewR = dtResult.NewRow();
-
-                NewR["id"] = i.Us["id"];
-                NewR["login"] = i.Us["login"];
-                NewR["password"] = i.Us["password"];
-                NewR["UserName"] = i.Us["name"];
-                NewR["TypeName"] = i.or["Type_Name"];
-                NewR["Allow_edit"] = i.or["Allow_edit"];
-                NewR["last_visit_date"] = i.Us["last_visit_date"];
-                
-
-                dtResult.Rows.Add(NewR);
-            }
-
-
-            return dtResult;
-
+            return CreateUsers(query);
         }
 
         public DataTable Join_Users_UserTypes_Filter(string UserType_ID)
         {
             //Накладываем фильтр
-            var query = from Us in Tabl_Users.AsEnumerable()
+            IEnumerable<Users_i> query = from Us in Tabl_Users.AsEnumerable()
                         join UsType in Tabl_UserType.AsEnumerable()
                         on Us["type_id"] equals UsType["id"] into TabResult
                         from or in TabResult
                         where Us["type_id"].ToString() == UserType_ID
-                        select new
+                        select new Users_i
                         {
-                            Us,
-                            or
+                            id= int.Parse(Us["id"].ToString()),
+                            login = Us["login"].ToString(),
+                            password = Us["password"].ToString(),
+                            name = Us["name"].ToString(),
+                            allow_edit = bool.Parse(or["Allow_edit"].ToString()),
+                            nameType = or["Type_Name"].ToString(),
+                            last_visit_date = Us["last_visit_date"].ToString()
+                            
                         };
 
+            return CreateUsers(query);
 
+        }
+
+        private DataTable CreateUsers(IEnumerable<Users_i> JoinQuery)
+        {
             DataTable dtResult = new DataTable();
 
             //  Заполнение
@@ -166,23 +149,21 @@ namespace UsersForm
             dtResult.Columns.Add("Allow_edit");
             dtResult.Columns.Add("last_visit_date");
 
-            foreach (var i in query)
+            foreach (var i in JoinQuery)
             {
                 DataRow NewR = dtResult.NewRow();
 
-                NewR["id"] = i.Us["id"];
-                NewR["login"] = i.Us["login"];
-                NewR["password"] = i.Us["password"];
-                NewR["UserName"] = i.Us["name"];
-                NewR["TypeName"] = i.or["Type_Name"];
-                NewR["Allow_edit"] = i.or["Allow_edit"];
-                NewR["last_visit_date"] = i.Us["last_visit_date"];
+                NewR["id"] = i.id;
+                NewR["login"] = i.login;
+                NewR["password"] = i.password;
+                NewR["UserName"] = i.name;
+                NewR["TypeName"] = i.nameType;
+                NewR["Allow_edit"] = i.allow_edit;
+                NewR["last_visit_date"] = i.last_visit_date;
 
                 dtResult.Rows.Add(NewR);
             }
-
             return dtResult;
-
         }
 
         public void LoadDataSourse()

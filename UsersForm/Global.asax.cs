@@ -11,6 +11,7 @@ namespace UsersForm
 {
     public class Global : HttpApplication
     {
+        
         void Application_Start(object sender, EventArgs e)
         {
             // Код, выполняемый при запуске приложения
